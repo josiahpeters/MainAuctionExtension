@@ -23,9 +23,10 @@
             }
 
 #BayGallery {
-    margin: .5em;
-
+    margin: .5em 0;
+    position: relative;
     margin-bottom: 1em;
+    overflow: hidden;
 }
 
     #BayGallery div.spinner {
@@ -33,16 +34,65 @@
         padding-top: 20%;
     }
 
-#carousel {
-    margin: 0 0 6px 0;
-}
-
-#carousel li {
-    margin: 0 3px;
+#thumbnails {
+    position: absolute;
+    left: 0;
+    top: .5em;
+    width: 170px;
+    z-index: 100;
     cursor: pointer;
+    background-color: #efefef;
+    min-height: 500px;
+}
+    #thumbnails h2 {
+        margin: 5px;
+        font-size: 16px;
+    }
+
+    #thumbnails h2 a {
+        margin: 5px;
+        font-size: 10px;
+    }
+        #thumbnails h2 a:hover {
+            color: #000;
+        }
+
+#thumbnails li {
+    float: left;
+    padding: 5px;
+}
+#thumbnails li img {
+    width: 75px;
 }
 
+.frame { width: 100%; height: 600px; padding: 0; }
+.frame .slidee { margin: 0; padding: 0; height: 100%; list-style: none; }
+.frame .slidee li { float: left; margin: 0 5px 0 0; padding: 10px; width: 600px; height: 100%; position: relative; }
 
+    .frame .slidee li div.next {
+        display: block;
+        border: 1px solid #aaa;
+        background-color: #dfdfdf;
+        border-radius: 5px;
+        vertical-align: middle;
+        text-align: center;
+    }
+
+        .frame .slidee li div.next:hover {
+        background-color: #cfcfcf;
+        }
+    
+    .frame .slidee li a {
+        width: 200px;
+        height: 300px;
+        display: block;
+        line-height: 300px;
+        font-size: 18px;
+        color: #666;
+    }
+        .frame .slidee li a:hover {
+            color: #000;
+        }
 
 /*.gallery-container {
     height: 100px;

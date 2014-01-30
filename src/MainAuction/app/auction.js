@@ -6,6 +6,8 @@ var bayId = "";
 var imageId = "";
 var startAt = 0;
 
+
+
 function init()
 {
     getSize();
@@ -21,6 +23,7 @@ function init()
 
     //$('<ul class="nav"><li><button id="Expand">Expand </button></li></ul>').insertAfter("body");
 
+    getSize();
     resize();
 
     $("a.bay").click(function (event)
@@ -31,6 +34,37 @@ function init()
         getBayGallery($(this).attr("href"));
     })
 
+    $("#BayGallery").on("click", "#thumbnails a", function (event)
+    {
+        event.preventDefault();
+        event.stopPropagation();
+
+        imageId = startAt = 0;
+
+        getBayGallery($(this).attr("href"));
+    })
+
+    $("#BayGallery").on("click", "#frame a", function (event)
+    {
+        event.preventDefault();
+        event.stopPropagation();
+
+        imageId = startAt = 0;
+
+        getBayGallery($(this).attr("href"));
+    })
+
+    $("#BayGallery").on("click", "#thumbnails img", function (event)
+    {
+        event.preventDefault();
+        event.stopPropagation();
+
+        imageId = startAt = $(this).data("id");
+
+        $("#frame").sly('toCenter', startAt);
+        setLocation();
+    });
+
     getLocation();
     loadFromUrl();
 }
@@ -40,6 +74,8 @@ function getBayGallery(href)
     var src = chrome.extension.getURL("img/ajax-loader.gif");
 
     bayId = href.replace("http://mainauctioncorp.com/bay-gallery/", "").replace("/", "").toUpperCase();
+    imageId = 0;
+    startAt = 0;
 
     $("#BayGallery").html("");
     $("#BayGallery").append('<div class="spinner"><p><img src="' + src + '" /></p><br /><p>Downloading Bay: <strong>' + bayId + '</strong></p></div>');
@@ -92,52 +128,99 @@ function setLocation()
     window.location.hash = "#" + bayId + "/" + imageId;
 }
 
+function finishedLoadingImages()
+{
+    if (imageLoadCount == imageCount)
+    {
+        var insideHeight = $("#BayGallery").height();
+        var $frame = $("#frame");
+
+        $("#frame").css({
+            height: insideHeight
+        });
+
+        $("#frame li img, frame li a").css({
+            height: insideHeight,
+            width: 'auto',
+        });
+        
+
+        $("#thumbnails").css({
+            height: insideHeight
+        });
+        
+        $frame.sly({
+            horizontal: 1,
+            itemNav: 'forceCentered',
+            smart: 1,
+            activateMiddle: 1,
+            activateOn: 'click',
+            mouseDragging: 1,
+            touchDragging: 1,
+            releaseSwing: 1,
+            startAt: 0,
+            //scrollBar: $wrap.find('.scrollbar'),
+            scrollBy: 1,
+            speed: 400,
+            elasticBounds: 1,
+            //easing: 'easeOutExpo',
+            dragHandle: 1,
+            dynamicHandle: 1,
+            clickBar: 1
+        });
+
+        $("#frame").sly('toCenter', startAt);
+    }
+}
+
+var imageLoadCount = 0;
+var imageCount = 0;
+
 function displayImages()
 {
-    var imageList = $('<ul class="slides"></ul>');
+    var imageList = $('<ul class="slidee"></ul>');
     var thumbnails = $('<ul class="slides"></ul>');
-    for(var i in images)
+
+    imageCount = images.length;
+    imageLoadCount = 0;
+
+    for (var i in images)
     {
         thumbnails.append('<li><img data-id="' + i + '" src="' + images[i].thumbnail + '" /></li>');
-        imageList.append('<li><img data-id="' + i + '" src="' + images[i].url + '" /></li>');
-        //imageList.append('<li><a class="thumbnail" href="' + images[i].url + '"><img src="' + images[i].thumbnail + '" /></a></li>');
+        imageList.append('<li><img data-id="' + i + '" /></li>');
+    }
+    var baySide = (bayId.indexOf("E") > 0 ? "E" : "W");
+    var previous = parseInt(bayId.replace("E", "").replace("W", "")) - 1;
+    var next = parseInt(bayId.replace("E", "").replace("W", "")) + 1;
+
+    imageList.append('<li><div class="next"><a href="http://mainauctioncorp.com/bay-gallery/' + next + baySide + '/">Next &gt;</a><div></li>');
+
+
+    var c1 = $('<div id="thumbnails"><h2><a href="http://mainauctioncorp.com/bay-gallery/' + previous + baySide + '/">&lt; Prev</a> Bay ' + bayId + ' <a href="http://mainauctioncorp.com/bay-gallery/' + next + baySide + '/">Next &gt;</a> </div>').append(thumbnails);
+
+    var c2 = $('<div id="frame" class="frame"></div>').append(imageList);
+
+    $("#BayGallery").append(c2);
+    $("#BayGallery").append(c1);
+
+    var imgs = imageList.find("img");
+
+    for (var i in images)
+    {
+        $(imgs[i]).load(function ()
+        {
+            imageLoadCount++;
+
+            finishedLoadingImages();
+        });
+        $(imgs[i]).attr("src", images[i].url);
     }
 
-    var c1 = $('<div id="carousel"  class="flexslider"></div>').append(thumbnails);
-    var c2 = $('<div id="slider" class="flexslider"></div>').append(imageList);
+    var insideHeight = $("#BayGallery").height();
 
-    $("#BayGallery").append(c1);
-    $("#BayGallery").append(c2);
-
-    $('#carousel').flexslider({
-        animation: "slide",
-        controlNav: false,
-        animationLoop: false,
-        slideshow: false,
-        itemWidth: 75,
-        itemMargin: 5,
-        asNavFor: '#slider'
-    });
-
-
-    $('#slider').flexslider({
-        animation: "slide",
-        controlNav: false,
-        animationLoop: false,
-        slideshow: false,
-        sync: "#carousel",
-        startAt: startAt,
-        after: function(slider)
-        {
-            imageId = slider.currentSlide;
-            setLocation();
-        }
-    });
-
-    $("#slider li img").css({
-        height: $("#BayGallery").height() - 80,
+    $("#frame li").css({
+        height: insideHeight,
         width: 'auto',
-        margin: 'auto'
     });
 
     setLocation();
@@ -157,7 +240,7 @@ function resize()
 
     }
 
-    $("#BayBrowser").height(height - 30)
+    $("#BayBrowser").height(height)
     $("#BayGallery").height($("#BayBrowser").height()-100);
 }
 
