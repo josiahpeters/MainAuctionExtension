@@ -1,0 +1,26 @@
+{
+  "manifest_version": 2,
+
+  "name": "Main Auction - Bay Browser",
+  "description": "This extension allows easier browsing of the mainauctioncorp.com auction bays images.",
+  "version": "1.1",
+  "update_url": "http://josiahpeters.com/Content/extensions/main-auction.xml",
+  "content_scripts": 
+	[
+		{
+			"matches" : ["http://mainauctioncorp.com/*"],
+			"js" : ["jquery-2.0.3.min.js", "jquery.flexslider.js", "auction.js"],
+			"run_at":"document_end",
+			"css": ["auction.css", "flexslider.css"]
+		}
+	],
+	"web_accessible_resources": [
+    "jquery-2.0.3.min.js",
+	"img/ajax-loader.gif",
+	"img/bg_play_pause.png",
+	"fonts/flexslider-icon.eot",
+	"fonts/flexslider-icon.svg",
+	"fonts/flexslider-icon.ttf",
+	"fonts/flexslider-icon.woff"
+  ]
+}

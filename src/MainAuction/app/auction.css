@@ -1,0 +1,62 @@
+﻿#BayBrowser {
+    clear: both;
+    overflow: hidden;
+    border: 1px solid #000;
+}
+
+    #BayBrowser ul.north, #BayBrowser ul.south {
+        height: 32px;
+    }
+
+        #BayBrowser ul.north > li, #BayBrowser ul.south > li {
+            float: left;
+        }
+
+            #BayBrowser ul.north > li > a, #BayBrowser ul.south > li > a {
+                display: block;
+                height: 18px;
+                padding: 5px;
+                margin: 1px;
+                background: #810e0e;
+                text-align: center;
+                color: #fff;
+            }
+
+#BayGallery {
+    margin: .5em;
+
+    margin-bottom: 1em;
+}
+
+    #BayGallery div.spinner {
+        text-align: center;
+        padding-top: 20%;
+    }
+
+#carousel {
+    margin: 0 0 6px 0;
+}
+
+#carousel li {
+    margin: 0 3px;
+    cursor: pointer;
+}
+
+
+
+/*.gallery-container {
+    height: 100px;
+    overflow-x: scroll;
+    overflow-y: hidden;
+    text-wrap: none;
+}
+
+    .gallery-container li {
+        display: inline-block;
+        margin: 5px 3px;
+    }
+
+    .gallery-container .thumbnail img {
+        width: 75px;
+        height: 75px;
+    }*/
